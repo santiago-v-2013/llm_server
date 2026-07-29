@@ -1,0 +1,75 @@
+# Configuration for the local vLLM server
+# This file is read by the run_vllm_server.sh script.
+
+# The Conda environment to use is defined in the .env file as CONDA_ENV.
+# Leave it empty to use the currently active Python interpreter.
+
+vllm:
+  # Hugging Face model name or local path to use.
+  # Examples: "microsoft/Phi-3-mini-4k-instruct", "meta-llama/Meta-Llama-3-8B-Instruct"
+  model: "meta-llama/Llama-3.1-8B-Instruct"
+
+  # Host address to bind the vLLM server to.
+  host: "127.0.0.1"
+
+  # TCP port where the vLLM server will listen.
+  port: 8000
+
+  # Data type for model weights and activations.
+  # Options: auto, half, bfloat16, float, float16
+  dtype: "auto"
+
+  # Number of GPUs to use for tensor parallelism.
+  # Use 1 for a single GPU, or more to distribute across multiple GPUs.
+  tensor_parallel_size: 1
+
+  # Fraction of total GPU VRAM that vLLM may use for model weights + KV cache
+  # combined. vLLM pre-allocates the KV cache at startup (by design) to avoid
+  # memory fragmentation during inference; there is no "use only what the model
+  # needs" mode.
+  #
+  # Minimum viable for Llama-3.1-8B (bfloat16, ~16 GB) on an L40S 46 GB:
+  #   ~0.38 → ~17.5 GB  (weights + minimal KV cache, 1-2 concurrent requests)
+  #
+  # If set too low vLLM will fail at startup with an OOM error during KV cache
+  # initialization. Increase if you see "out of memory" or need more throughput.
+  gpu_memory_utilization: 0.5
+
+  # Maximum sequence length the server will accept.
+  max_model_len: 4096
+
+  # Directory where downloaded models are cached.
+  # Relative paths are resolved from the workspace root.
+  download_dir: "models/vllm"
+
+  # If true, allows execution of custom code from the model repository.
+  trust_remote_code: true
+
+  # Random seed for reproducibility.
+  seed: 42
+
+  # Hugging Face access token is now read from config/.env
+  # Set the variable HF_TOKEN in config/.env
+
+gpu:
+  # Comma-separated list of GPU device IDs to use.
+  # Leave empty to let vLLM choose automatically.
+  # Example for one GPU: "0"
+  # Example for multiple GPUs: "0,1"
+  visible_devices: "0"
+
+server:
+  # If true, the server runs in the background as a detached process.
+  # If false, the server runs in the foreground and the terminal is blocked.
+  background: false
+
+  # Path to the log file when running in background mode.
+  # Relative paths are resolved from the workspace root.
+  log_file: "logs/vllm_server.log"
+
+  # Timeout in seconds to wait for the server to become responsive
+  # after starting it in the background.
+  startup_timeout: 300
+
+  # If true, an existing server process will be stopped before starting a new one.
+  force_restart: false

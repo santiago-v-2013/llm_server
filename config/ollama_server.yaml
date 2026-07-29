@@ -1,0 +1,77 @@
+# Configuration for the local Ollama server
+# This file is read by the run_ollama_server.sh script.
+
+ollama:
+  # Model to use. It will be downloaded automatically if not already present.
+  # See available models at https://ollama.com/library
+  model: "llama3.1:8b"
+
+  # Host address to bind the Ollama server to.
+  # Use 127.0.0.1 to allow only local connections,
+  # or 0.0.0.0 to accept connections from other machines on the network.
+  host: "127.0.0.1"
+
+  # TCP port where the Ollama server will listen.
+  port: 11434
+
+  # Directory where Ollama stores models and related data.
+  # Relative paths are resolved from the workspace root.
+  models_dir: "models/ollama"
+
+  # Directory where Ollama keeps temporary files.
+  # Leave empty to use the default Ollama location.
+  tmp_dir: ""
+
+  # Optional origin value(s) for CORS, separated by commas.
+  # Leave empty to use Ollama defaults.
+  # Example: "http://localhost,http://localhost:3000"
+  origin: ""
+
+gpu:
+  # If true, force the use of GPU acceleration when available.
+  # If false, CPU inference is forced.
+  use_gpu: true
+
+  # Comma-separated list of GPU device IDs to use.
+  # Leave empty to let Ollama choose automatically across all available GPUs.
+  # Example for one GPU: "0"
+  # Example for multiple GPUs: "0,1"
+  # Example for the second GPU only: "1"
+  visible_devices: "0"
+
+  # Maximum number of models to keep loaded in GPU memory at the same time.
+  # Leave empty to use Ollama default.
+  max_loaded_models: ""
+
+  # Maximum number of parallel requests to process simultaneously.
+  # Leave empty to use Ollama default.
+  num_parallel: ""
+
+server:
+  # If true, the server runs in the background as a detached process.
+  # If false, the server runs in the foreground and the terminal is blocked.
+  background: false
+
+  # Path to the log file when running in background mode.
+  # Relative paths are resolved from the workspace root.
+  log_file: "logs/ollama_server.log"
+
+  # Timeout in seconds to wait for the server to become responsive
+  # after starting it in the background.
+  startup_timeout: 10
+
+  # If true, an existing server process will be stopped before starting a new one.
+  force_restart: false
+
+  # How long Ollama keeps the model loaded in memory after a request.
+  # Examples: "0" (unload immediately), "5m" (default), "30m", "24h".
+  # A longer value avoids reloading the model between consecutive requests.
+  # Use "999999h" or similar to keep the model loaded until the server dies.
+  keep_alive: "999999h"
+
+  # If true, send a warm-up request to the model right after the server starts.
+  # This forces Ollama to load the model into RAM/VRAM immediately.
+  warm_up_model: true
+
+  # Prompt used for the warm-up request.
+  warm_up_prompt: "Say 'ready' and nothing else."
