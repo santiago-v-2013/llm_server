@@ -1,14 +1,17 @@
 # Ignore all files inside the logs directory
 logs/*
-!logs/.gitkeep # Maintain the .gitkeep file to keep the logs directory in the repository
+# Maintain the .gitkeep file to keep the logs directory in the repository
+!logs/.gitkeep
 
 # Ignore the models inside the models directory 
 models/*
-!models/.gitkeep # Maintain the .gitkeep file to keep the models directory in the repository
+# Maintain the .gitkeep file to keep the models directory in the repository
+!models/.gitkeep
 
 # Ignore all variants of the .env file
 .env*
-!.env.example # Keep the .env.example file in the repository for reference
+# Keep the .env.example file in the repository for reference
+!.env.example
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
