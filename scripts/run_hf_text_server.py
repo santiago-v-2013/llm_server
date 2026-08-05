@@ -91,9 +91,20 @@ def chat_completions():
         # Verificar si el modelo tiene soporte oficial para formato chat (Instruct)
         has_chat_template = hasattr(pipe.tokenizer, "chat_template") and pipe.tokenizer.chat_template is not None
         
+        # Configurar parámetros de generación basados en el request (max_tokens y temperature)
+        temp = float(data.get("temperature", 0.0))
+        do_sample = temp > 0.0
+        gen_kwargs = {
+            "max_new_tokens": data.get("max_tokens", 512),
+            "return_full_text": False,
+            "do_sample": do_sample
+        }
+        if do_sample:
+            gen_kwargs["temperature"] = temp
+        
         if has_chat_template:
             # Modelo Instruct: El tokenizador sabe cómo estructurar los turnos de diálogo
-            outputs = pipe(messages, max_new_tokens=data.get("max_tokens", 512), return_full_text=False)
+            outputs = pipe(messages, **gen_kwargs)
         else:
             # Modelo Base: No sabe qué es un 'user' o un 'assistant'. 
             # Tenemos que aplanar la conversación manualmente a un solo string.
@@ -112,7 +123,7 @@ def chat_completions():
                     prompt_str += f"Assistant: {content}\n"
             
             prompt_str += "Assistant:" # Trigger para que empiece a escribir
-            outputs = pipe(prompt_str, max_new_tokens=data.get("max_tokens", 512), return_full_text=False)
+            outputs = pipe(prompt_str, **gen_kwargs)
         
         if isinstance(outputs, list) and len(outputs) > 0:
             gen_text = outputs[0].get("generated_text", "")
