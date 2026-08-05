@@ -1,6 +1,6 @@
 active_engines:
-  llm: none
-  media: diffusers
+  llm: huggingface
+  media: none
   vision: none
 server:
   host: 0.0.0.0

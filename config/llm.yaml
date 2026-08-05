@@ -9,12 +9,12 @@ huggingface:
   engine_config:
     visible_devices: '0'
   host: 127.0.0.1
-  model: bczhou/tiny-llava-v1-hf
+  model: meta-llama/Llama-3.1-8B-Instruct
   options:
     frequency_penalty: 0.0
     presence_penalty: 0.0
   port: 8000
-  task: image-text-to-text
+  task: text-generation
 ollama:
   engine_config:
     keep_alive: 24h
