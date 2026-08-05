@@ -48,6 +48,32 @@ La lógica de negocio está totalmente separada de la configuración.
 
 ---
 
+## 🎯 Tareas Soportadas (Tasks)
+
+El framework es agnóstico y permite configurar las tareas directamente en los archivos `.yaml` (`config/llm.yaml`, `config/media.yaml`, `config/vision.yaml`).
+
+**Para Modelos de Texto (`llm.yaml`):**
+* `text-generation`: Generación de lenguaje natural estándar (Llama, Mistral).
+* `image-text-to-text`: Para Modelos de Visión-Lenguaje (VLMs como LLaVA).
+
+**Para Modelos Multimedia (`media.yaml`):**
+* `text-to-image`: Generación de imágenes (ej. Stable Diffusion).
+* `image-to-image`: Modificación de imágenes base.
+* `text-to-video`: Generación de video desde cero.
+* `image-to-video`: Animación de imágenes (ej. Stable Video Diffusion).
+* `text-to-audio`: Efectos de sonido o música (ej. AudioLDM).
+
+**Para Modelos de Visión (`vision.yaml`):**
+*Soporta nativamente los pipelines de HuggingFace transformers, incluyendo:*
+* `zero-shot-object-detection`: Detección de objetos con texto libre (GroundingDINO).
+* `object-detection`: Detección con bounding boxes pre-entrenados.
+* `image-classification`: Clasificación tradicional (ResNet).
+* `zero-shot-image-classification`: Clasificación dinámica sin entrenamiento (CLIP).
+* `image-segmentation`: Máscaras de píxeles exactas (DETR, Mask2Former).
+* `depth-estimation`: Mapas de profundidad 3D.
+
+---
+
 ## 🚀 Cómo Empezar (Setup Rápido)
 
 1. **Instalar Dependencias:**
