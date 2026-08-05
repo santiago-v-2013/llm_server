@@ -106,7 +106,8 @@ def main():
         env["LLM_MODEL_ID"] = model
         env["LLM_TASK"] = task
         env["PORT"] = str(port)
-        env["HF_HOME"] = os.environ.get("MODELS_DIR", str(workspace_dir / "models"))
+        base_models_dir = os.environ.get("MODELS_DIR", str(workspace_dir / "models"))
+        env["HF_HOME"] = str(Path(base_models_dir) / "llm")
         
         # Visible devices
         engine_cfg = hf_cfg.get("engine_config", {})
@@ -136,7 +137,8 @@ def main():
         env["MEDIA_MODEL_ID"] = model
         env["MEDIA_TASK"] = task
         env["PORT"] = str(port)
-        env["HF_HOME"] = os.environ.get("MODELS_DIR", str(workspace_dir / "models"))
+        base_models_dir = os.environ.get("MODELS_DIR", str(workspace_dir / "models"))
+        env["HF_HOME"] = str(Path(base_models_dir) / "media")
         p = subprocess.Popen([gunicorn_path, "-w", "1", "--threads", "4", "--bind", f"127.0.0.1:{port}", "--timeout", "600", "scripts.run_media_server:app"], env=env)
         processes.append(p)
     elif media_server_type != "none":
@@ -160,7 +162,8 @@ def main():
         env["VISION_MODEL_ID"] = model
         env["VISION_TASK"] = task
         env["PORT"] = str(port)
-        env["HF_HOME"] = os.environ.get("MODELS_DIR", str(workspace_dir / "models"))
+        base_models_dir = os.environ.get("MODELS_DIR", str(workspace_dir / "models"))
+        env["HF_HOME"] = str(Path(base_models_dir) / "vision")
         p = subprocess.Popen([gunicorn_path, "-w", "1", "--threads", "4", "--bind", f"127.0.0.1:{port}", "--timeout", "120", "scripts.run_vision_server:app"], env=env)
         processes.append(p)
     elif vision_server_type != "none":
