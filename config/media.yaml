@@ -1,0 +1,7 @@
+diffusers:
+  host: 127.0.0.1
+  model: stabilityai/stable-video-diffusion-img2vid
+  options:
+    num_inference_steps: 25
+  port: 5001
+  task: image-to-video

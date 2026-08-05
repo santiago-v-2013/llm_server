@@ -1,0 +1,9 @@
+active_engines:
+  llm: none
+  media: diffusers
+  vision: none
+server:
+  host: 0.0.0.0
+  port: 5000
+  threads: 8
+  workers: 4

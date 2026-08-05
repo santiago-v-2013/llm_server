@@ -1,0 +1,12 @@
+# ==========================================
+# Configuración para Suite de Pruebas
+# ==========================================
+# Cambia a `true` los motores que quieras testear
+
+test_engines:
+  llm: true
+  media: true
+  vision: true
+
+# Endpoint base donde el orquestador levanta la API
+api_url: "http://127.0.0.1:5000"

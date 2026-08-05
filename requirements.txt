@@ -1,0 +1,32 @@
+# ==========================================
+# 1. API & Core Infrastructure
+# ==========================================
+flask          # Web Framework
+gunicorn       # Servidor de Producción (WSGI)
+asgiref        # Soporte para rutas asíncronas en Flask (async/await)
+pydantic       # Validación estricta de datos (Schemas)
+httpx          # Cliente HTTP asíncrono para los microservicios
+PyYAML         # Lector de archivos de configuración (.yaml)
+python-dotenv  # Manejo de variables de entorno
+
+# ==========================================
+# 2. AI & Deep Learning Base
+# ==========================================
+torch          # PyTorch (Framework principal de tensores)
+torchvision    # Dependencia requerida por modelos de visión (ej. DETR)
+transformers   # Pipeline unificado para Visión de HuggingFace
+diffusers      # Pipeline para Generación de Multimedia (Img, Vid, Audio)
+accelerate     # Optimización de carga de modelos en GPU (VRAM)
+sentencepiece  # Utilidad de tokenización para algunos LLMs de HuggingFace
+protobuf       # Utilidad de parsing de grafos requerida por modelos de HF
+
+# ==========================================
+# 3. Media Processing (Data & Output)
+# ==========================================
+numpy          # Procesamiento de matrices matemáticas
+pillow         # Manipulación de imágenes nativa (PIL)
+scipy          # Herramientas científicas (usado para compilar .wav)
+soundfile      # Soporte extendido de codecs de audio
+imageio        # Librería para compilar secuencias de imágenes
+imageio[ffmpeg] # Motor FFMPEG para exportar los videos a .mp4
+Flask-Limiter   # Rate limiting framework para defender contra DoS

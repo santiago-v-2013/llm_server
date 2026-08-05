@@ -57,3 +57,12 @@ target/
 # IPython
 profile_default/
 ipython_config.py
+
+# Environments and Caches
+.mypy_cache/
+.venv_lint/
+
+# Databases
+*.db
+*.sqlite
+*.sqlite3

@@ -1,0 +1,10 @@
+# ==========================================
+# Configuración para Visión Computacional
+# ==========================================
+
+huggingface:
+  host: "127.0.0.1"
+  port: 5002
+  task: "zero-shot-object-detection"  # Tareas: "object-detection", "image-segmentation", "image-classification"
+  model: "IDEA-Research/grounding-dino-tiny"
+  options: {}

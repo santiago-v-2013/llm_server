@@ -1,0 +1,29 @@
+common_options:
+  max_tokens: 1024
+  min_p: 0.05
+  repeat_penalty: 1.1
+  temperature: 0.7
+  top_k: 40
+  top_p: 0.9
+huggingface:
+  engine_config:
+    visible_devices: '0'
+  host: 127.0.0.1
+  model: bczhou/tiny-llava-v1-hf
+  options:
+    frequency_penalty: 0.0
+    presence_penalty: 0.0
+  port: 8000
+  task: image-text-to-text
+ollama:
+  engine_config:
+    keep_alive: 24h
+    max_loaded_models: 1
+    num_parallel: 1
+    use_gpu: true
+    visible_devices: '0'
+  host: 127.0.0.1
+  model: neoali/kanana-1.5-2.1b-instruct-2505:latest
+  options:
+    num_ctx: 4096
+  port: 11434

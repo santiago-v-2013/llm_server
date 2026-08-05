@@ -24,38 +24,10 @@ from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
+from dotenv import load_dotenv
 
-# -----------------------------------------------------------------------------
-# Environment file loading
-# -----------------------------------------------------------------------------
-def _load_dotenv(dotenv_path: Path) -> None:
-    """Parse a .env file and set variables in the environment.
 
-    Lines starting with # and empty lines are ignored.
-    Values are stripped of surrounding quotes.
-    """
-    if not dotenv_path.exists():
-        return
 
-    with open(dotenv_path, "r", encoding="utf-8") as file:
-        for line in file:
-            line = line.strip()
-            if not line or line.startswith("#") or "=" not in line:
-                continue
-
-            key, value = line.split("=", 1)
-            key = key.strip()
-            value = value.strip()
-
-            if not key:
-                continue
-
-            # Remove surrounding quotes if present
-            if (value.startswith('"') and value.endswith('"')) or \
-                (value.startswith("'") and value.endswith("'")):
-                value = value[1:-1]
-
-            os.environ.setdefault(key, value)
 
 
 # -----------------------------------------------------------------------------
@@ -141,7 +113,7 @@ def get_logger(name: str) -> logging.Logger:
 
     if not logging.getLogger().handlers:
         workspace_dir = Path(__file__).resolve().parent.parent
-        _load_dotenv(workspace_dir / ".env")
+        load_dotenv(workspace_dir / ".env")
 
         log_file_path = os.getenv("LOG_FILE_PATH", "") or None
         log_to_file = log_file_path is not None or os.getenv("LOG_TO_FILE", "false").lower() == "true"

@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "llm_server"
+version = "1.0.0"
+description = "Un servidor unificado (Gateway) para orquestar LLMs, VLMs, y modelos de generación de medios."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [
+    { name = "Developer", email = "dev@example.com" }
+]
+dependencies = [
+    "flask",
+    "gunicorn",
+    "asgiref",
+    "pydantic",
+    "httpx",
+    "PyYAML",
+    "python-dotenv",
+    "torch",
+    "torchvision",
+    "transformers",
+    "diffusers",
+    "accelerate",
+    "sentencepiece",
+    "protobuf",
+    "numpy",
+    "pillow",
+    "scipy",
+    "soundfile",
+    "imageio",
+    "imageio[ffmpeg]"
+]
+
+[project.scripts]
+llm-server = "scripts.orchestrator:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*", "scripts*", "config*"]
