@@ -25,7 +25,8 @@ class MediaClient:
             
         payload.update(kwargs)
 
-        async with httpx.AsyncClient(timeout=600.0) as client:
+        # Disable timeout for media generation (Stable Diffusion can take a while)
+        async with httpx.AsyncClient(timeout=None) as client:
             response = await client.post(f"{self.base_url}/generate", json=payload)
             if response.status_code != 200:
                 raise Exception(f"Media server error: {response.text}")

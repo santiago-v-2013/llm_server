@@ -33,7 +33,8 @@ class HFClient(LLMClientBase):
         payload.update({**common, **specific})
         payload.update(kwargs)
 
-        async with httpx.AsyncClient(timeout=120.0) as client:
+        # Disable timeout for LLMs since generating max_tokens can take several minutes on local GPUs
+        async with httpx.AsyncClient(timeout=None) as client:
             response = await client.post(f"{self.base_url}/chat/completions", json=payload)
             if response.status_code >= 400:
                 logger.error(f"HTTP Error {response.status_code}: {response.text}")

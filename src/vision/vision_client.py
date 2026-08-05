@@ -26,7 +26,8 @@ class VisionClient:
             
         payload.update(kwargs)
 
-        async with httpx.AsyncClient(timeout=60.0) as client:
+        # Disable timeout for vision tasks as some segmentations or zero-shot detections take time
+        async with httpx.AsyncClient(timeout=None) as client:
             response = await client.post(f"{self.base_url}/analyze", json=payload)
             if response.status_code != 200:
                 raise Exception(f"Vision server error: {response.text}")
