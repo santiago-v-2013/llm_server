@@ -34,6 +34,8 @@ Es la puerta de enlace orientada al cliente, construida con Flask Asíncrono y s
   - `POST /v1/chat/completions/batch`
   - `POST /v1/media/generations`
   - `POST /v1/vision/analyses`
+  - `GET /v1/models` (Autodescubrimiento dinámico de los motores activos)
+  - **Inyección Transparente**: Los parámetros `temperature` y `max_tokens` que envíes en el JSON de la petición se enrutan automáticamente hasta el Pipeline del motor interno.
 
 ### 3. Motores de Inferencia (Los Cerebros)
 El código de los motores está estrictamente separado por su naturaleza funcional en `scripts/run_*`:
