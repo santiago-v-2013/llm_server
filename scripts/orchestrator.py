@@ -7,6 +7,10 @@ import time
 import atexit
 import socket
 from pathlib import Path
+from dotenv import load_dotenv
+
+# Cargar variables de entorno desde .env
+load_dotenv()
 
 # Fix module imports for direct execution
 workspace_dir = Path(__file__).resolve().parents[1]
@@ -102,6 +106,7 @@ def main():
         env["LLM_MODEL_ID"] = model
         env["LLM_TASK"] = task
         env["PORT"] = str(port)
+        env["HF_HOME"] = os.environ.get("MODELS_DIR", str(workspace_dir / "models"))
         
         # Visible devices
         engine_cfg = hf_cfg.get("engine_config", {})
@@ -131,6 +136,7 @@ def main():
         env["MEDIA_MODEL_ID"] = model
         env["MEDIA_TASK"] = task
         env["PORT"] = str(port)
+        env["HF_HOME"] = os.environ.get("MODELS_DIR", str(workspace_dir / "models"))
         p = subprocess.Popen([gunicorn_path, "-w", "1", "--threads", "4", "--bind", f"127.0.0.1:{port}", "--timeout", "600", "scripts.run_media_server:app"], env=env)
         processes.append(p)
     elif media_server_type != "none":
@@ -154,6 +160,7 @@ def main():
         env["VISION_MODEL_ID"] = model
         env["VISION_TASK"] = task
         env["PORT"] = str(port)
+        env["HF_HOME"] = os.environ.get("MODELS_DIR", str(workspace_dir / "models"))
         p = subprocess.Popen([gunicorn_path, "-w", "1", "--threads", "4", "--bind", f"127.0.0.1:{port}", "--timeout", "120", "scripts.run_vision_server:app"], env=env)
         processes.append(p)
     elif vision_server_type != "none":

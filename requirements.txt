@@ -15,6 +15,7 @@ python-dotenv  # Manejo de variables de entorno
 torch          # PyTorch (Framework principal de tensores)
 torchvision    # Dependencia requerida por modelos de visión (ej. DETR)
 transformers   # Pipeline unificado para Visión de HuggingFace
+timm           # (Torch Image Models) Requerido como backbone para modelos como DETR
 diffusers      # Pipeline para Generación de Multimedia (Img, Vid, Audio)
 accelerate     # Optimización de carga de modelos en GPU (VRAM)
 sentencepiece  # Utilidad de tokenización para algunos LLMs de HuggingFace
