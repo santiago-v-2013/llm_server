@@ -87,6 +87,8 @@ class ChatCompletionRequest(BaseModel):
     model: Optional[str] = None
     messages: List[ChatMessage]
     stream: Optional[bool] = False
+    temperature: Optional[float] = None
+    max_tokens: Optional[int] = None
 
 class BatchChatCompletionRequest(BaseModel):
     requests: List[ChatCompletionRequest]
@@ -115,6 +117,21 @@ def create_error(code: str, message: str, details: Any = None):
 # -----------------------------------------------------------------------------
 # API Routes
 # -----------------------------------------------------------------------------
+@app.route('/v1/models', methods=['GET'])
+def list_models():
+    models = []
+    if llm_client is not None:
+        models.append({"id": getattr(llm_client, "model", "llm-unknown"), "object": "model", "type": "llm"})
+    if media_client is not None:
+        models.append({"id": getattr(media_client, "model", "media-unknown"), "object": "model", "type": "media"})
+    if vision_client is not None:
+        models.append({"id": getattr(vision_client, "model", "vision-unknown"), "object": "model", "type": "vision"})
+        
+    return jsonify({
+        "data": models,
+        "object": "list"
+    }), 200
+
 @app.route('/v1/chat/completions', methods=['POST'])
 async def chat_completions():
     try:
@@ -145,6 +162,10 @@ async def chat_completions():
         # Bloqueo estricto: El usuario NO puede elegir el modelo.
         # Siempre usamos el modelo configurado en el YAML por el administrador.
         kwargs = {}
+        if req_data.temperature is not None:
+            kwargs['temperature'] = req_data.temperature
+        if req_data.max_tokens is not None:
+            kwargs['max_tokens'] = req_data.max_tokens
 
         response_text = await llm_client.chat(internal_messages, **kwargs)
         
@@ -197,6 +218,10 @@ async def chat_completions_batch():
             
             # Bloqueo estricto en batch: Se ignora req_data.model
             kwargs = {}
+            if req_data.temperature is not None:
+                kwargs['temperature'] = req_data.temperature
+            if req_data.max_tokens is not None:
+                kwargs['max_tokens'] = req_data.max_tokens
             
             # Append the coroutine to the list without awaiting it yet
             coroutines.append(llm_client.chat(internal_messages, **kwargs))

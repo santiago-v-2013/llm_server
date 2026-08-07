@@ -3,11 +3,23 @@ import torch
 from flask import Flask, request, jsonify
 from transformers import pipeline
 import sys
+import yaml
 from pathlib import Path
 
 workspace_dir = Path(__file__).resolve().parents[1]
 if str(workspace_dir) not in sys.path:
     sys.path.insert(0, str(workspace_dir))
+
+config_path = workspace_dir / "config" / "llm.yaml"
+try:
+    with open(config_path, "r", encoding="utf-8") as f:
+        llm_config = yaml.safe_load(f) or {}
+except Exception:
+    llm_config = {}
+
+common_options = llm_config.get("common_options", {})
+default_max_tokens = common_options.get("max_tokens", 512)
+default_temperature = common_options.get("temperature", 0.7)
 
 from src.logger_config import get_logger
 
@@ -45,6 +57,13 @@ try:
 except Exception as e:
     logger.error(f"❌ Error cargando el modelo de texto: {e}")
     pipe = None
+
+@app.route("/v1/models", methods=["GET"])
+def get_models():
+    return jsonify({
+        "data": [{"id": model_id, "object": "model"}],
+        "object": "list"
+    })
 
 @app.route("/v1/chat/completions", methods=["POST"])
 def chat_completions():
@@ -91,9 +110,28 @@ def chat_completions():
         # Verificar si el modelo tiene soporte oficial para formato chat (Instruct)
         has_chat_template = hasattr(pipe.tokenizer, "chat_template") and pipe.tokenizer.chat_template is not None
         
+        # Configurar parámetros de generación basados en el request (o valores por defecto del config)
+        temp = data.get("temperature")
+        if temp is None:
+            temp = default_temperature
+        temp = float(temp)
+        
+        max_tokens = data.get("max_tokens")
+        if max_tokens is None:
+            max_tokens = default_max_tokens
+            
+        do_sample = temp > 0.0
+        gen_kwargs = {
+            "max_new_tokens": max_tokens,
+            "return_full_text": False,
+            "do_sample": do_sample
+        }
+        if do_sample:
+            gen_kwargs["temperature"] = temp
+        
         if has_chat_template:
             # Modelo Instruct: El tokenizador sabe cómo estructurar los turnos de diálogo
-            outputs = pipe(messages, max_new_tokens=data.get("max_tokens", 512), return_full_text=False)
+            outputs = pipe(messages, **gen_kwargs)
         else:
             # Modelo Base: No sabe qué es un 'user' o un 'assistant'. 
             # Tenemos que aplanar la conversación manualmente a un solo string.
@@ -112,7 +150,7 @@ def chat_completions():
                     prompt_str += f"Assistant: {content}\n"
             
             prompt_str += "Assistant:" # Trigger para que empiece a escribir
-            outputs = pipe(prompt_str, max_new_tokens=data.get("max_tokens", 512), return_full_text=False)
+            outputs = pipe(prompt_str, **gen_kwargs)
         
         if isinstance(outputs, list) and len(outputs) > 0:
             gen_text = outputs[0].get("generated_text", "")
@@ -124,6 +162,7 @@ def chat_completions():
             response_text = str(outputs)
 
         return jsonify({
+            "model": model_id,
             "choices": [{
                 "message": {
                     "role": "assistant",
